@@ -1,0 +1,35 @@
+
+> backend@1.0.0 dev
+> nodemon index.js
+
+[33m[nodemon] 3.1.11[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.3.1] injecting env (4) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+Server running on port 5000
+Error: options usenewurlparser, useunifiedtopology are not supported
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.3.1] injecting env (4) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+Server running on port 5000
+MongoDB Connected: 127.0.0.1
+User connected: 2DwPu54peSM2dYzuAAAC
+User disconnected: 2DwPu54peSM2dYzuAAAC
+User disconnected: 2DwPu54peSM2dYzuAAAC
+User connected: j1UXaEBW25DIEtQsAAAF
+User disconnected: j1UXaEBW25DIEtQsAAAF
+User disconnected: j1UXaEBW25DIEtQsAAAF
+User connected: Uh1b-Fm601Dw8OmDAAAI
+User disconnected: Uh1b-Fm601Dw8OmDAAAI
+User disconnected: Uh1b-Fm601Dw8OmDAAAI
+User connected: bDMQUpBqkCCmsutjAAAL
+User disconnected: bDMQUpBqkCCmsutjAAAL
+User disconnected: bDMQUpBqkCCmsutjAAAL
+User connected: qIQRGUmftb5ulzUXAAAO
+User disconnected: qIQRGUmftb5ulzUXAAAO
+User disconnected: qIQRGUmftb5ulzUXAAAO
+User connected: gZAVoGQUzDcvBmbwAAAR
+Terminate batch job (Y/N)? Terminate batch job (Y/N)? 
