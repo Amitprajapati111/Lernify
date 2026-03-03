@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    // baseURL: 'http://localhost:5000/api',
+    baseURL: "https://learnify-backend-1jkh.onrender.com",
 });
 
 // Request interceptor to add auth token
