@@ -159,7 +159,17 @@ const VirtualClassroom = () => {
     }, [user._id]);
 
     function createPeer(userToSignal, callerID, stream, socket, myUserData) {
-        const peer = new Peer({ initiator: true, trickle: false, stream });
+        const peer = new Peer({
+            initiator: true,
+            trickle: false,
+            stream,
+            config: {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:global.stun.twilio.com:3478' }
+                ]
+            }
+        });
 
         peer.on('signal', (signal) => {
             if (signal.type === 'offer') {
@@ -173,7 +183,17 @@ const VirtualClassroom = () => {
     }
 
     function addPeer(incomingSignal, callerID, stream, socket) {
-        const peer = new Peer({ initiator: false, trickle: false, stream });
+        const peer = new Peer({
+            initiator: false,
+            trickle: false,
+            stream,
+            config: {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:global.stun.twilio.com:3478' }
+                ]
+            }
+        });
 
         peer.on('signal', (signal) => {
             if (signal.type === 'answer') {
