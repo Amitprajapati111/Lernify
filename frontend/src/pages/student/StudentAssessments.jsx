@@ -164,8 +164,8 @@ const StudentAssessments = () => {
                                                 <div className="flex-1">
                                                     <div className="flex items-center space-x-3 mb-1">
                                                         <span className={`px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ${assessment.type === 'exam' ? 'bg-purple-100 text-purple-700' :
-                                                                assessment.type === 'quiz' ? 'bg-amber-100 text-amber-700' :
-                                                                    'bg-blue-100 text-blue-700'
+                                                            assessment.type === 'quiz' ? 'bg-amber-100 text-amber-700' :
+                                                                'bg-blue-100 text-blue-700'
                                                             }`}>
                                                             {assessment.type}
                                                         </span>
@@ -216,7 +216,7 @@ const StudentAssessments = () => {
                                             {assessment.fileUrl && (
                                                 <div className="mt-4 pt-4 border-t border-slate-100 flex">
                                                     <a
-                                                        href={`http://localhost:5000${assessment.fileUrl}`}
+                                                        href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'http://localhost:5000'}${assessment.fileUrl}`}
                                                         target="_blank"
                                                         rel="noreferrer"
                                                         className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-primary-600 transition"
