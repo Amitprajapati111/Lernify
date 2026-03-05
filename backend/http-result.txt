@@ -1,0 +1,11 @@
+Status: 404
+Body: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /api/live-classes/room/4b45174f-6134-4e40-9c7e-930167266a71</pre>
+</body>
+</html>

@@ -110,10 +110,30 @@ const endLiveClass = async (req, res) => {
     }
 };
 
+// @desc    Get live class by roomId
+// @route   GET /api/live-classes/room/:roomId
+// @access  Private (Teacher, Admin, or enrolled Student)
+const getLiveClassByRoomId = async (req, res) => {
+    try {
+        const liveClass = await LiveClass.findOne({ roomId: req.params.roomId })
+            .populate('subject', 'name code')
+            .populate('teacher', 'name role');
+
+        if (!liveClass) {
+            return res.status(404).json({ message: 'Live class not found' });
+        }
+
+        res.json(liveClass);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getActiveClasses,
     getActiveClassesBySubject,
     createLiveClass,
     startLiveClass,
-    endLiveClass
+    endLiveClass,
+    getLiveClassByRoomId
 };

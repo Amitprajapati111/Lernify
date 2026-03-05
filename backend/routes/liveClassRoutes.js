@@ -10,6 +10,9 @@ router.route('/')
 router.route('/subject/:subjectId')
     .get(protect, checkStudentAccess, liveClassController.getActiveClassesBySubject);
 
+router.route('/room/:roomId')
+    .get(protect, liveClassController.getLiveClassByRoomId);
+
 router.route('/:id/start')
     .put(protect, authorize('teacher', 'admin'), liveClassController.startLiveClass);
 

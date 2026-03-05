@@ -11,7 +11,7 @@ const markAttendance = async (req, res) => {
         const studentId = req.user.id;
 
         const liveClass = await LiveClass.findOne({ roomId: liveClassId });
-        if (!liveClass || liveClass.status !== 'ongoing') {
+        if (!liveClass || (liveClass.status !== 'ongoing' && liveClass.status !== 'scheduled')) {
             return res.status(400).json({ message: 'Live class is not currently active' });
         }
 
