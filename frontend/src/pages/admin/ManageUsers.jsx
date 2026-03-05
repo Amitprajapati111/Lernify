@@ -77,6 +77,15 @@ const ManageUsers = () => {
         }
     };
 
+    const handleManualCourseChange = (e) => {
+        const courseId = e.target.value;
+        setNewUserState({ ...newUserState, courseId, semesterId: '' });
+        setSemesters([]);
+        if (courseId) {
+            fetchSemesters(courseId);
+        }
+    };
+
     const handleFileChange = (e) => {
         setCsvFile(e.target.files[0]);
     };
@@ -322,12 +331,25 @@ const ManageUsers = () => {
                                     />
                                 </div>
                                 <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">Assign to Course</label>
+                                    <select
+                                        value={newUserState.courseId}
+                                        onChange={handleManualCourseChange}
+                                        className="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-primary-500"
+                                        required
+                                    >
+                                        <option value="">Select Course...</option>
+                                        {courses.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+                                    </select>
+                                </div>
+                                <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">Assign to Semester Group</label>
                                     <select
                                         value={newUserState.semesterId}
                                         onChange={e => setNewUserState({ ...newUserState, semesterId: e.target.value })}
                                         className="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-primary-500"
                                         required
+                                        disabled={!newUserState.courseId || semesters.length === 0}
                                     >
                                         <option value="">Select Semester...</option>
                                         {semesters.map(s => <option key={s._id} value={s._id}>Semester {s.number}</option>)}

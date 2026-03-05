@@ -11,6 +11,9 @@ const VirtualClassroom = () => {
     const navigate = useNavigate();
     const { roomId } = useParams();
 
+    // Live Class Info State
+    const [classData, setClassData] = useState(null);
+
     // WebRTC & Socket State
     const [peers, setPeers] = useState([]);
     const [peerStreams, setPeerStreams] = useState({});
@@ -28,6 +31,7 @@ const VirtualClassroom = () => {
     // Reactions State
     const [showEmojis, setShowEmojis] = useState(false);
     const [floatingReactions, setFloatingReactions] = useState([]);
+    const [raisedHands, setRaisedHands] = useState(new Set());
 
     // Layout State
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -142,6 +146,25 @@ const VirtualClassroom = () => {
                 }, 4000);
             });
 
+            socket.on('receive-hand-raise', (data) => {
+                setRaisedHands(prev => {
+                    const next = new Set(prev);
+                    if (data.isRaised) {
+                        next.add(data.senderId);
+                    } else {
+                        next.delete(data.senderId);
+                    }
+                    return next;
+                });
+            });
+
+            // Fetch Live Class details to replace hardcoded header
+            apiClient.get(`/live-classes/room/${roomId}`)
+                .then(res => {
+                    setClassData(res.data);
+                })
+                .catch(err => console.error('Error fetching class data:', err));
+
         }).catch(err => console.error(err));
 
         return () => {
@@ -165,8 +188,11 @@ const VirtualClassroom = () => {
             stream,
             config: {
                 iceServers: [
-                    { urls: 'stun:stun.l.google.com:19302' },
-                    { urls: 'stun:global.stun.twilio.com:3478' }
+                    { urls: "stun:stun.relay.metered.ca:80" },
+                    { urls: "turn:global.relay.metered.ca:80", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" },
+                    { urls: "turn:global.relay.metered.ca:80?transport=tcp", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" },
+                    { urls: "turn:global.relay.metered.ca:443", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" },
+                    { urls: "turns:global.relay.metered.ca:443?transport=tcp", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" }
                 ]
             }
         });
@@ -189,8 +215,11 @@ const VirtualClassroom = () => {
             stream,
             config: {
                 iceServers: [
-                    { urls: 'stun:stun.l.google.com:19302' },
-                    { urls: 'stun:global.stun.twilio.com:3478' }
+                    { urls: "stun:stun.relay.metered.ca:80" },
+                    { urls: "turn:global.relay.metered.ca:80", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" },
+                    { urls: "turn:global.relay.metered.ca:80?transport=tcp", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" },
+                    { urls: "turn:global.relay.metered.ca:443", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" },
+                    { urls: "turns:global.relay.metered.ca:443?transport=tcp", username: "de13454314abd33a32f6a659", credential: "0o1bm14wTtttiyLw" }
                 ]
             }
         });
@@ -354,6 +383,25 @@ const VirtualClassroom = () => {
         }, 4000);
     };
 
+    const toggleHandRaise = () => {
+        const currentlyRaised = raisedHands.has(user._id);
+        const newState = !currentlyRaised;
+
+        socketRef.current.emit('send-hand-raise', {
+            isRaised: newState,
+            senderId: user._id,
+            senderName: user.name
+        });
+
+        // Update local state immediately
+        setRaisedHands(prev => {
+            const next = new Set(prev);
+            if (newState) next.add(user._id);
+            else next.delete(user._id);
+            return next;
+        });
+    };
+
     const toggleStudentScreenShare = () => {
         const newState = !studentsCanShare;
         setStudentsCanShare(newState);
@@ -453,7 +501,7 @@ const VirtualClassroom = () => {
             >
                 {/* Full Screen Video */}
                 <div className="absolute inset-0 z-0">
-                    <ParticipantVideo isLocal={focusTarget.isLocal} userData={focusTarget.userData} stream={focusTarget.stream} isMain={true} noLabel={true} />
+                    <ParticipantVideo isLocal={focusTarget.isLocal} userData={focusTarget.userData} stream={focusTarget.stream} isMain={true} noLabel={true} isHandRaised={raisedHands.has(focusTarget.userData._id)} />
                 </div>
 
                 {/* Floating Chat Overlay (Optional) */}
@@ -504,7 +552,7 @@ const VirtualClassroom = () => {
                     <button onClick={toggleVideo} className={`p-3 rounded-full ${videoMuted ? 'bg-red-500/90' : 'bg-slate-700/80 hover:bg-slate-600/90'} text-white transition cursor-pointer`}>
                         {videoMuted ? <VideoOff size={20} /> : <Video size={20} />}
                     </button>
-                    <button className="p-3 rounded-full bg-slate-700/80 hover:bg-slate-600/90 text-white transition cursor-pointer">
+                    <button onClick={toggleHandRaise} className={`p-3 rounded-full ${raisedHands.has(user._id) ? 'bg-yellow-500/90' : 'bg-slate-700/80 hover:bg-slate-600/90'} text-white transition cursor-pointer`}>
                         <Hand size={20} />
                     </button>
                     {['admin', 'teacher'].includes(user.role) && (
@@ -559,8 +607,12 @@ const VirtualClassroom = () => {
             {/* Header */}
             <header className="bg-slate-900 px-6 py-3 flex justify-between items-center border-b border-slate-800 shrink-0 shadow-sm z-10">
                 <div>
-                    <h2 className="text-lg font-bold">Data Structures & Algorithms</h2>
-                    <p className="text-xs text-slate-400">Prof. Smith • Ongoing</p>
+                    <h2 className="text-lg font-bold">
+                        {classData ? classData.topic : 'Loading Class...'}
+                    </h2>
+                    <p className="text-xs text-slate-400">
+                        {classData ? `${classData.subject?.name || 'Subject'} • ${classData.teacher?.name || 'Prof. Unknown'} • ${classData.status === 'ongoing' ? 'Ongoing' : 'Scheduled'}` : 'Connecting...'}
+                    </p>
                 </div>
                 <div className="flex space-x-3 items-center">
                     {/* Top Right Controls */}
@@ -603,7 +655,7 @@ const VirtualClassroom = () => {
                     {/* Main Stage Grid */}
                     <div className={`flex-1 grid gap-4 auto-rows-fr ${mainStage.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                         {mainStage.map(p => (
-                            <ParticipantVideo key={p.peerID} isLocal={p.isLocal} userData={p.userData} stream={p.stream} isMain={true} />
+                            <ParticipantVideo key={p.peerID} isLocal={p.isLocal} userData={p.userData} stream={p.stream} isMain={true} isHandRaised={raisedHands.has(p.userData._id)} />
                         ))}
                     </div>
 
@@ -613,7 +665,7 @@ const VirtualClassroom = () => {
                             <h3 className="text-slate-300 text-xs font-semibold mb-1 uppercase tracking-wider">Classmates ({sidebarStage.length})</h3>
                             {sidebarStage.map(p => (
                                 <div key={p.peerID} className="h-32 lg:h-40 shrink-0">
-                                    <ParticipantVideo isLocal={p.isLocal} userData={p.userData} stream={p.stream} isMain={false} />
+                                    <ParticipantVideo isLocal={p.isLocal} userData={p.userData} stream={p.stream} isMain={false} isHandRaised={raisedHands.has(p.userData._id)} />
                                 </div>
                             ))}
                         </div>
@@ -667,7 +719,7 @@ const VirtualClassroom = () => {
                 <button onClick={toggleVideo} className={`p-4 rounded-full shadow-lg ${videoMuted ? 'bg-red-500' : 'bg-slate-800 hover:bg-slate-700'} transition cursor-pointer`}>
                     {videoMuted ? <VideoOff size={22} /> : <Video size={22} />}
                 </button>
-                <button className="p-4 rounded-full bg-slate-800 shadow-lg hover:bg-slate-700 transition cursor-pointer">
+                <button onClick={toggleHandRaise} className={`p-4 rounded-full shadow-lg ${raisedHands.has(user._id) ? 'bg-yellow-500' : 'bg-slate-800 hover:bg-slate-700'} transition cursor-pointer`}>
                     <Hand size={22} />
                 </button>
                 {['admin', 'teacher'].includes(user.role) && (
@@ -711,7 +763,7 @@ const VirtualClassroom = () => {
     );
 };
 
-const ParticipantVideo = ({ isLocal, userData, stream, isMain, noLabel = false }) => {
+const ParticipantVideo = ({ isLocal, userData, stream, isMain, noLabel = false, isHandRaised = false }) => {
     const ref = useRef();
 
     useEffect(() => {
@@ -733,8 +785,18 @@ const ParticipantVideo = ({ isLocal, userData, stream, isMain, noLabel = false }
             )}
 
             {!noLabel && (
-                <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-white text-xs font-medium shadow-sm border border-white/10">
-                    {userData?.name || 'Student'} {isLocal ? '(You)' : ''}
+                <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-white text-xs font-medium shadow-sm border border-white/10 flex items-center space-x-2">
+                    <span>
+                        {userData?.name || 'Student'}
+                        <span className="text-slate-400 capitalize ml-1">({userData?.role || 'student'})</span>
+                        {isLocal ? ' (You)' : ''}
+                    </span>
+                    {isHandRaised && <Hand size={14} className="text-yellow-400" />}
+                </div>
+            )}
+            {noLabel && isHandRaised && (
+                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md p-2 rounded-full shadow-md z-10 text-yellow-400 border border-white/10">
+                    <Hand size={18} />
                 </div>
             )}
         </div>
