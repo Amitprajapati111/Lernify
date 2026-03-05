@@ -14,6 +14,7 @@ import TeacherCourses from './pages/teacher/TeacherCourses';
 import TeacherEvaluation from './pages/teacher/TeacherEvaluation';
 import GlobalCourses from './pages/admin/GlobalCourses';
 import GlobalLiveClasses from './pages/admin/GlobalLiveClasses';
+import LandingPage from './pages/LandingPage';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -122,7 +123,7 @@ function AppRoutes() {
             </PrivateRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/" element={<LandingPage />} />
       </Routes>
     </Router>
   );
