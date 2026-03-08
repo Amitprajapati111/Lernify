@@ -8,7 +8,7 @@
 - **Admins:** Manage academic structures (semesters, subjects), user accounts, and bulk data (CSV uploads).
 - **Teachers:** Schedule live classes, upload study materials, create assessments, and grade submissions.
 - **Students:** Attend classes, track attendance, download materials, and submit assignments.
-**Core Features:** Real-time virtual classrooms (WebRTC + Socket.io), role-based access control, bulk CSV student onboarding, dynamic attendance tracking, and assessment management.
+**Core Features:** Real-time virtual classrooms (WebRTC + Socket.io), role-based access control, bulk CSV student onboarding, dynamic attendance tracking with manual overrides and CSV exports, assessment management, and a premium animated marketing landing page.
 **Unique Selling Points:** Integrated WebRTC signaling meaning no external video API costs. Intelligent attendance system that calculates active minutes in a live class.
 **Why this project matters:** It demonstrates full-stack mastery, particularly in real-time bidirectional communication (WebSockets), peer-to-peer streaming (WebRTC), complex relational data modeling in NoSQL, and handling file streams.
 
@@ -24,6 +24,9 @@
 - **Tailwind CSS 4:** 
   - *What:* Utility-first CSS framework.
   - *Advantages:* Rapid styling without context switching; small production bundle. 
+- **Framer Motion & Lucide Icons:**
+  - *What:* Animation library and SVG icon system.
+  - *Why Chosen:* Used to build a premium, story-driven animated landing page with a dark-mode-first SaaS aesthetic.
 - **Socket.io-client & simple-peer:** 
   - *What:* Real-time event library and WebRTC wrapper.
   - *Why Chosen:* Abstracts the complex ICE candidate exchange and STUN/TURN server negotiations required for video calls.
@@ -43,6 +46,9 @@
 - **Multer & csv-parser:**
   - *What:* Middleware for handling `multipart/form-data` and streams for parsing CSVs.
   - *Why Chosen:* Required for assessment submissions and admin bulk onboarding.
+- **json2csv:**
+  - *What:* Converter that translates JSON into CSV formats.
+  - *Why Chosen:* Chosen to ensure reliable teacher-facing class attendance CSV exports, specially handling edge cases like zero or problematic attendance data safely.
 
 ---
 
@@ -60,7 +66,7 @@ Client-Server architecture. The React frontend communicates with the Express bac
 3. DB validated, JWT generated and returned.
 4. Client sends JWT in `Authorization: Bearer <token>` for protected routes.
 5. `authMiddleware.protect` verifies JWT, attaches `req.user`, and passes to the next controller.
-**WebRTC Flow:** Client A (Teacher) emits `offer` via socket -> Server relays it -> Client B (Student) receives and returns `answer` -> Server relays -> Peer connection established directly between A & B.
+**WebRTC & NAT Traversal Flow:** Client A (Teacher) emits `offer` via socket -> Server relays it -> Client B (Student) receives and returns `answer` -> Server relays -> Peer connection established. To ensure this works across **different networks** (bypassing strict firewalls and NATs), the frontend `simple-peer` instances are configured with external **STUN/TURN servers** (provided by `metered.ca`). STUN discovers public IP addresses, while TURN acts as a fallback relay for video routing when direct P2P fails.
 **Scalability:** Currently monolithic. To scale horizontally, the Socket.io server would need a Redis Adapter to share state across multiple Node instances, and MongoDB would need replica sets.
 
 ---
@@ -92,7 +98,7 @@ Client-Server architecture. The React frontend communicates with the Express bac
 - `User`: Single collection handling Admins, Teachers, and Students using a `role` enum. Students have `enrollmentNo` and `semester` refs. Teachers have `department`. This is a "Single Table Inheritance" pattern.
 - `AcademicStructure`: Contains `Course`, `Semester`, and `Subject`. Strict hierarchical references.
 - `LiveClass`: Links `Subject`, `Teacher`, and generates a unique `roomId`. 
-- `Attendance`: Links `LiveClass` and `Student`. Records `joinTime`, `leaveTime`, and `durationMinutes`.
+- `Attendance`: Links `LiveClass` and `Student`. Records `joinTime`, `leaveTime`, `durationMinutes`, `status` (present/absent/late), and tracks `isManualOverride` representing teacher-initiated corrections.
 - `Assessment` & `Submission`: One-to-many relationship.
 **Indexing Strategy:** 
 - `User.email` has a unique index.
@@ -127,14 +133,17 @@ Client-Server architecture. The React frontend communicates with the Express bac
 
 ## 8. ADVANCED CONCEPTS USED
 - **WebRTC Signaling via Socket.io:** Bypassing traditional HTTP request-response cycles to establish real-time, peer-to-peer data and media pipelines.
+- **NAT Traversal with STUN/TURN:** Real-world networks frequently block direct P2P video streaming due to Network Address Translation (NAT) and strict firewalls. The project implements a robust array of **STUN & TURN servers (`metered.ca`)** (over both UDP and TCP ports like 80 and 443) injected directly into the `simple-peer` configuration. This guarantees that video and audio connect successfully even if students are on deeply nested corporate or university WiFi networks.
 - **Middleware Chain of Responsibility:** Express middlewares are used perfectly to validate auth -> authorize role -> check resource ownership -> parse files -> execute controller.
 - **Streaming Files:** Parsing CSVs via Node streams (`fs.createReadStream`) prevents memory overflow compared to reading the entire file into RAM via `fs.readFile`.
+- **Robust CSV Edge-Case Handling:** Using schemas and parsers (`json2csv`) to dynamically handle edge-cases for data exports where data points (like attendance entries missing expected durations) previously broke file integrity.
 - **Database Transactions (Missing but needed):** Adding a student and updating the `Group` array in Admin controller happens in two steps. If the server crashes in between, data becomes inconsistent. MongoDB Transactions should be used here.
 
 ---
 
 ## 9. NEW APPROACHES & MODERN TECH
 - **Vite & React 19:** Utilizing the absolute bleeding edge of React development.
+- **Framer Motion Animations:** Incorporating complex layout, entry/exit, and scroll-linked animations in the Landing Page to create a compelling, immersive product narrative.
 - **Serverless Possibility:** The core REST API could be moved to AWS Lambda. However, the Socket.io server MUST remain on a stateful server (EC2/ECS) or be replaced with AWS API Gateway WebSockets.
 - **Microservices Potential:** Real-time classes (WebRTC/Sockets) could be split into a separate microservice (`video-service`) to scale independently from the core LMS (`core-service`).
 
@@ -167,7 +176,7 @@ Client-Server architecture. The React frontend communicates with the Express bac
 
 ### C. Advanced Level Questions
 1. **Q:** Explain WebRTC signaling and how Socket.io facilitates it in your app.
-   - *Strong Answer:* WebRTC requires clients to exchange SDP (Session Description Protocol) offers, answers, and ICE candidates to find optimal network paths. Socket.io acts as the signaling server to relay these payloads because WebRTC peers cannot locate each other directly over the internet without this initial handshake.
+   - *Strong Answer:* WebRTC requires clients to exchange SDP (Session Description Protocol) offers, answers, and ICE candidates to find optimal network paths. Socket.io acts as the signaling server to relay these payloads because WebRTC peers cannot locate each other directly over the internet without this initial handshake. Furthermore, to work across different networks behind NATs and Firewalls, I configured the ICE servers with external STUN (to get public IPs) and TURN servers (as fallback media relays) using `metered.ca`.
 2. **Q:** How would you refactor your bulk CSV upload to handle 100,000 records?
    - *Strong Answer:* Currently, it processes rows iteratively. I would offload processing to a background worker (e.g., BullMQ + Redis). Instead of iterative `User.create()`, I'd use MongoDB `insertMany()` with `ordered: false` to bulk insert optimally.
 
@@ -179,7 +188,7 @@ Client-Server architecture. The React frontend communicates with the Express bac
 
 ## 12. HOW TO EXPLAIN THIS PROJECT CONFIDENTLY
 - **30-Second Elevator Pitch:** "Learnify is a comprehensive Learning Management System built on the MERN stack. It streamlines administration, role-based workflows, and features a custom-built real-time virtual classroom using WebRTC to facilitate live, interactive peer-to-peer video sessions without relying on expensive third-party APIs."
-- **2-Minute Pitch:** (Expand on the 30s pitch) "I identified that integrating Zoom with existing ERPs was clunky. I architected Learnify to handle the entire lifecycle. Admins manage taxonomy and bulk uploads via streams. Teachers manage materials and grades. The crown jewel is the live class module: I utilized Socket.io as a signaling server for WebRTC, enabling P2P video, live chat, and automated duration-based attendance tracking calculated on the backend."
+- **2-Minute Pitch:** (Expand on the 30s pitch) "I identified that integrating Zoom with existing ERPs was clunky. I architected Learnify to handle the entire lifecycle. Admins manage taxonomy and bulk uploads via streams. Teachers manage materials and grades. The crown jewel is the live class module: I utilized Socket.io as a signaling server for WebRTC, enabling P2P video, live chat, and automated duration-based attendance tracking calculated on the backend. To ensure reliability across unpredictable dorm and home WiFi networks, I integrated robust STUN/TURN server configurations for guaranteed NAT traversal."
 - **Defending Design Decisions:**
   - *Why not Next.js?* "An LMS is heavily gated behind auth; public SEO isn't required. Vite + pure React offered faster development iterations."
   - *Why local uploads?* "For MVP speed. In production, I'd wrap the Multer streams to pipe directly to AWS S3 to keep the Node server stateless."
