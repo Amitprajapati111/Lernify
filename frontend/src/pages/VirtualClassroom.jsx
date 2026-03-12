@@ -24,6 +24,16 @@ const VirtualClassroom = () => {
     const [audioMuted, setAudioMuted] = useState(false);
     const [videoMuted, setVideoMuted] = useState(false);
     const [chatOpen, setChatOpen] = useState(false);
+    const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+    const chatOpenRef = useRef(chatOpen);
+
+    useEffect(() => {
+        chatOpenRef.current = chatOpen;
+        if (chatOpen) {
+            setHasUnreadMessages(false);
+        }
+    }, [chatOpen]);
+
     const [msgInput, setMsgInput] = useState('');
     const [isScreenSharing, setIsScreenSharing] = useState(false);
     const [studentsCanShare, setStudentsCanShare] = useState(false);
@@ -126,6 +136,9 @@ const VirtualClassroom = () => {
 
             socket.on('receive-message', (data) => {
                 setMessages(prev => [...prev, data]);
+                if (!chatOpenRef.current) {
+                    setHasUnreadMessages(true);
+                }
             });
 
             socket.on('screen-share-permission', (allowed) => {
@@ -565,8 +578,11 @@ const VirtualClassroom = () => {
                             <MonitorUp size={20} />
                         </button>
                     )}
-                    <button onClick={() => setChatOpen(!chatOpen)} className={`p-3 rounded-full ${chatOpen ? 'bg-primary-600/90' : 'bg-slate-700/80 hover:bg-slate-600/90'} text-white transition cursor-pointer`}>
+                    <button onClick={() => setChatOpen(!chatOpen)} className={`p-3 rounded-full relative ${chatOpen ? 'bg-primary-600/90' : 'bg-slate-700/80 hover:bg-slate-600/90'} text-white transition cursor-pointer`}>
                         <MessageSquare size={20} />
+                        {hasUnreadMessages && !chatOpen && (
+                            <span className="absolute top-0 right-0 w-3 h-3 bg-blue-500 rounded-full border-2 border-slate-900"></span>
+                        )}
                     </button>
                     <div className="w-px h-8 bg-slate-700 mx-2"></div>
                     <button onClick={() => setFocusMode(false)} className="p-3 rounded-full bg-slate-700/80 hover:bg-slate-600/90 text-white transition cursor-pointer" title="Exit Focus Mode">
@@ -755,8 +771,11 @@ const VirtualClassroom = () => {
                     )}
                 </div>
 
-                <button onClick={() => setChatOpen(!chatOpen)} className={`p-4 rounded-full shadow-lg ${chatOpen ? 'bg-primary-600' : 'bg-slate-800 hover:bg-slate-700'} transition cursor-pointer`}>
+                <button onClick={() => setChatOpen(!chatOpen)} className={`block relative p-4 rounded-full shadow-lg ${chatOpen ? 'bg-primary-600' : 'bg-slate-800 hover:bg-slate-700'} transition cursor-pointer`}>
                     <MessageSquare size={22} />
+                    {hasUnreadMessages && !chatOpen && (
+                        <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-slate-900"></span>
+                    )}
                 </button>
             </footer>
         </div>
