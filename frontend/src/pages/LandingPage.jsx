@@ -62,7 +62,7 @@ const LandingPage = () => {
                 {/* ========================================== */}
                 {/* SECTION 1: HERO (Story Driven)             */}
                 {/* ========================================== */}
-                <section className="relative px-6 pt-20 lg:pt-32 pb-20 mx-auto max-w-7xl">
+                <section className="relative px-6 pt-0 lg:pt-0 pb-20 mx-auto max-w-7xl">
                     <div className="text-center max-w-4xl mx-auto">
 
                         <motion.div
