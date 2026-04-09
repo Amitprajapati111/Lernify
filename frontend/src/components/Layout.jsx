@@ -17,7 +17,7 @@ const Layout = ({ children, title }) => {
             <div className="w-64 bg-slate-900 text-white flex flex-col shrink-0">
                 <div className="p-6 flex items-center space-x-3 mb-2">
                     <BookOpen className="text-primary-500" />
-                    <span className="text-xl font-bold">Learnify</span>
+                    <span className="text-xl font-bold">Lernify</span>
                 </div>
                 <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto">                    {user.role === 'admin' && (
                     <>

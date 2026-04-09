@@ -35,7 +35,7 @@ const LandingPage = () => {
                             <GraduationCap className="text-white w-5 h-5" />
                         </div>
                         <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                            Learnify
+                            Lernify
                         </span>
                     </div>
 
@@ -83,7 +83,7 @@ const LandingPage = () => {
                         >
                             Education shouldn't feel chaotic. <br className="hidden md:block" />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-                                Learnify makes it effortless.
+                                Lernify makes it effortless.
                             </span>
                         </motion.h1>
 
@@ -103,7 +103,7 @@ const LandingPage = () => {
                             className="flex flex-col sm:flex-row items-center justify-center gap-4"
                         >
                             <Link to="/login" className="w-full sm:w-auto px-8 py-4 text-base font-medium text-white transition-all bg-indigo-600 rounded-full hover:bg-indigo-700 shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:shadow-[0_0_40px_rgba(79,70,229,0.5)] flex items-center justify-center group">
-                                Start Using Learnify
+                                Start Using Lernify
                                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
                             <a href="#features" className="w-full sm:w-auto px-8 py-4 text-base font-medium text-white transition-all bg-slate-800/80 border border-slate-700 rounded-full hover:bg-slate-800 backdrop-blur-md flex items-center justify-center">
@@ -506,7 +506,7 @@ const LandingPage = () => {
                 {/* ========================================== */}
                 <section className="relative px-6 py-24 mx-auto max-w-7xl overflow-hidden">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6">See Learnify In Action</h2>
+                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6">See Lernify In Action</h2>
                         <p className="text-lg text-slate-400">Discover how intuitive and powerful the dashboards are for every user.</p>
                     </div>
 
@@ -516,7 +516,7 @@ const LandingPage = () => {
                             <div className="w-3 h-3 rounded-full bg-slate-600" />
                             <div className="w-3 h-3 rounded-full bg-slate-600" />
                             <div className="w-3 h-3 rounded-full bg-slate-600" />
-                            <div className="ml-4 px-4 py-1.5 bg-slate-900 rounded-md text-xs text-slate-500 font-mono tracking-widest border border-slate-700">learnify.university.edu/admin/dashboard</div>
+                            <div className="ml-4 px-4 py-1.5 bg-slate-900 rounded-md text-xs text-slate-500 font-mono tracking-widest border border-slate-700">lernify.university.edu/admin/dashboard</div>
                         </div>
 
                         {/* Scrolling Content Fake */}
@@ -591,7 +591,7 @@ const LandingPage = () => {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
                             <Link to="/login" className="w-full sm:w-auto px-8 py-4 text-base font-medium text-white transition-all bg-indigo-600 rounded-full hover:bg-indigo-500 shadow-[0_0_30px_rgba(79,70,229,0.4)] flex items-center justify-center group">
-                                Start Using Learnify Now
+                                Start Using Lernify Now
                                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
                             <Link to="/login" className="w-full sm:w-auto px-8 py-4 text-base font-medium text-indigo-100 transition-all bg-slate-800/50 border border-indigo-500/30 rounded-full hover:bg-slate-800 hover:text-white backdrop-blur-md flex items-center justify-center">
@@ -613,7 +613,7 @@ const LandingPage = () => {
                                 <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
                                     <GraduationCap className="text-white w-5 h-5" />
                                 </div>
-                                <span className="font-bold text-xl text-white">Learnify</span>
+                                <span className="font-bold text-xl text-white">Lernify</span>
                             </div>
                             <p className="text-sm text-slate-400 mb-6">The modern operating system for education. Effortless classroom management, live learning, and academic tracking.</p>
                         </div>
@@ -649,7 +649,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                        <p className="text-sm text-slate-500 mb-4 md:mb-0">© {new Date().getFullYear()} Learnify Platform. All rights reserved.</p>
+                        <p className="text-sm text-slate-500 mb-4 md:mb-0">© {new Date().getFullYear()} Lernify Platform. All rights reserved.</p>
                         <div className="flex space-x-6 text-slate-500">
                             <a href="#" className="hover:text-white transition-colors">Terms</a>
                             <a href="#" className="hover:text-white transition-colors">Privacy</a>

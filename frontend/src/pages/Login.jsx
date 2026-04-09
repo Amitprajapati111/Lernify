@@ -27,7 +27,7 @@ const Login = () => {
                     <BookOpen size={48} />
                 </div>
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                    Sign in to Learnify
+                    Sign in to Lernify
                 </h2>
             </div>
 
