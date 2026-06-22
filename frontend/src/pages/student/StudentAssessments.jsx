@@ -216,7 +216,7 @@ const StudentAssessments = () => {
                                             {assessment.fileUrl && (
                                                 <div className="mt-4 pt-4 border-t border-slate-100 flex">
                                                     <a
-                                                        href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'http://localhost:5000'}${assessment.fileUrl}`}
+                                                        href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'https://api.lernify.tech'}${assessment.fileUrl}`}
                                                         target="_blank"
                                                         rel="noreferrer"
                                                         className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-primary-600 transition"

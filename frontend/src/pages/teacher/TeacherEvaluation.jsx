@@ -213,7 +213,7 @@ const TeacherEvaluation = () => {
                                                     </td>
                                                     <td className="px-6 py-4 text-center">
                                                         {sub.fileUrl ? (
-                                                            <a href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'http://localhost:5000'}${sub.fileUrl}`} target="_blank" rel="noreferrer" className="inline-flex items-center text-primary-600 hover:text-primary-800 font-medium bg-primary-50 px-3 py-1 rounded transition">
+                                                            <a href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'https://api.lernify.tech'}${sub.fileUrl}`} target="_blank" rel="noreferrer" className="inline-flex items-center text-primary-600 hover:text-primary-800 font-medium bg-primary-50 px-3 py-1 rounded transition">
                                                                 <Search size={14} className="mr-1.5" /> View
                                                             </a>
                                                         ) : (

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 let envUrl = import.meta.env.VITE_API_BASE_URL;
-let apiUrl = envUrl ? (envUrl.endsWith('/api') ? envUrl : envUrl.replace(/\/$/, '') + '/api') : 'http://localhost:5000/api';
+let apiUrl = envUrl ? (envUrl.endsWith('/api') ? envUrl : envUrl.replace(/\/$/, '') + '/api') : 'https://api.lernify.tech/api';
 
 const apiClient = axios.create({
     baseURL: apiUrl,

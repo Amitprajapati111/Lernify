@@ -125,7 +125,7 @@ const StudentMaterials = () => {
                                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-200">
                                         <span className="text-xs text-slate-400">By {mat.teacher?.name || 'Instructor'}</span>
                                         <a
-                                            href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'http://localhost:5000'}${mat.fileUrl}`}
+                                            href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'https://api.lernify.tech'}${mat.fileUrl}`}
                                             target="_blank"
                                             rel="noreferrer"
                                             className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
