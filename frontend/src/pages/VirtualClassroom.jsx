@@ -64,7 +64,7 @@ const VirtualClassroom = () => {
 
         let isMounted = true;
         const backendUrl = import.meta.env.VITE_API_BASE_URL
-            ? import.meta.env.VITE_API_BASE_URL.replace('/api', '')
+            ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '')
             : 'https://api.lernify.tech';
 
         const socket = io(backendUrl);

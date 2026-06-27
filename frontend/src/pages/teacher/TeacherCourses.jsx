@@ -270,7 +270,7 @@ const TeacherCourses = () => {
                                                 <h3 className="font-semibold text-slate-800 line-clamp-1 mb-1">{mat.title}</h3>
                                                 <p className="text-sm text-slate-500 line-clamp-2 h-10">{mat.description}</p>
                                                 {mat.fileUrl && (
-                                                    <a href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'https://api.lernify.tech'}${mat.fileUrl}`} target="_blank" rel="noreferrer" className="text-sm font-medium text-primary-600 hover:text-primary-700 mt-4 inline-block">View File &rarr;</a>
+                                                    <a href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '') : 'https://api.lernify.tech'}${mat.fileUrl}`} target="_blank" rel="noreferrer" className="text-sm font-medium text-primary-600 hover:text-primary-700 mt-4 inline-block">View File &rarr;</a>
                                                 )}
                                             </div>
                                         ))}
@@ -359,7 +359,7 @@ const TeacherCourses = () => {
                                                     <div className="text-sm font-medium text-slate-500 mb-1">Due Date</div>
                                                     <div className="text-slate-800 font-semibold">{new Date(task.dueDate).toLocaleString()}</div>
                                                     {task.fileUrl && (
-                                                        <a href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') : 'https://api.lernify.tech'}${task.fileUrl}`} target="_blank" rel="noreferrer" className="inline-flex items-center text-sm text-primary-600 hover:text-primary-700 font-medium mt-2">
+                                                        <a href={`${import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '') : 'https://api.lernify.tech'}${task.fileUrl}`} target="_blank" rel="noreferrer" className="inline-flex items-center text-sm text-primary-600 hover:text-primary-700 font-medium mt-2">
                                                             <FileText size={14} className="mr-1" /> View Context Doc
                                                         </a>
                                                     )}
